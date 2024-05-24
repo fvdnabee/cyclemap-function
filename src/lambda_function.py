@@ -58,7 +58,7 @@ class BBox:
     ne_lat: float
 
 
-def get_cyclemap_entries(bbox: BBox, begin: datetime.datetime, end: datetime.datetime, client=None):
+def get_cyclemap_entries(bbox: BBox, begin: datetime.datetime, end: datetime.datetime, client=None) -> list[dict]:
     """Return cyclemap entries from mongodb."""
     if client is None:
         client = _get_mongoclient()
