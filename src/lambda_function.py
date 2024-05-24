@@ -20,7 +20,10 @@ def lambda_handler(event, context):
 
     map_entries = get_cyclemap_entries(*args)
 
-    return {'statusCode': 200, 'body': json.dumps(map_entries, default=_json_serial)}
+    return {
+        'statusCode': 200,
+        'body': json.dumps(map_entries, default=_json_serial)
+    }
 
 
 def parse_request(event):
@@ -41,8 +44,10 @@ def parse_request(event):
         raise ValueError("Invalid bbox.") from ex
 
     try:
-        begin = datetime.datetime.fromisoformat(segments[6].replace("Z", "+00:00"))
-        end = datetime.datetime.fromisoformat(segments[7].replace("Z", "+00:00"))
+        begin = datetime.datetime.fromisoformat(segments[6].replace(
+            "Z", "+00:00"))
+        end = datetime.datetime.fromisoformat(segments[7].replace(
+            "Z", "+00:00"))
     except ValueError as ex:
         raise ValueError("Invalid time range.") from ex
 
@@ -58,17 +63,17 @@ class BBox:
     ne_lat: float
 
 
-def get_cyclemap_entries(bbox: BBox, begin: datetime.datetime, end: datetime.datetime, client=None) -> list[dict]:
+def get_cyclemap_entries(bbox: BBox,
+                         begin: datetime.datetime,
+                         end: datetime.datetime,
+                         client=None) -> list[dict]:
     """Return cyclemap entries from mongodb."""
     if client is None:
         client = _get_mongoclient()
 
     # Build the filter dict
     filt = {}
-    filt['created_at'] = {
-        '$gte': begin,
-        '$lte': end
-    }
+    filt['created_at'] = {'$gte': begin, '$lte': end}
 
     box = [(bbox.sw_lng, bbox.sw_lat), (bbox.ne_lng, bbox.ne_lat)]
     filt['location'] = {'$geoWithin': {'$box': box}}
