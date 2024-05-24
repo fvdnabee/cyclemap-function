@@ -1,1 +1,1 @@
-pymongo[srv]==4.3.3  # srv required in order to resolve MongoDB Atlas cloud URL
+pymongo[srv]==4.7.2  # srv required in order to resolve MongoDB Atlas cloud URL
