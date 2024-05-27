@@ -30,12 +30,6 @@ provider "aws" {
   profile = "vdna"
 }
 
-variable "mongodb_uri" {
-  type      = string
-  nullable  = false
-  sensitive = true
-}
-
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
@@ -78,7 +72,7 @@ resource "aws_lambda_function" "cyclemap" {
 
   environment {
     variables = {
-      MONGODB_URI = var.mongodb_uri
+      MONGODB_URI = local.mongodb_uri
     }
   }
 }
