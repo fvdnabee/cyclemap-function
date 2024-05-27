@@ -18,7 +18,7 @@ terraform {
 
 provider "aws" {
   # Configuration options
-  region  = "eu-west-1"
+  region  = "eu-central-1"
   profile = "vdna"
 }
 
@@ -80,7 +80,7 @@ locals {
 }
 
 resource "aws_lambda_function" "cyclemap" {
-  # If the file is not in the current working directory you will need to include a 
+  # If the file is not in the current working directory you will need to include a
   # path.module in the filename.
   filename      = local.deployment_package
   function_name = "cyclemap_entries"
