@@ -33,8 +33,6 @@ provider "aws" {
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
-  // lambda:InvokeFunctionUrl and lambda:InvokeFunction roles taken from 'Example — Default resource-based policy for NONE auth type'
-  // See https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html#urls-auth-none
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -46,28 +44,6 @@ resource "aws_iam_role" "iam_for_lambda" {
       },
       "Effect": "Allow",
       "Sid": ""
-    },
-    {
-      "Action": "lambda:InvokeFunctionUrl",
-      "Principal": "*",
-      "Effect": "Allow",
-      "Sid": "FunctionURLAllowPublicAccess",
-      "Condition": {
-        "StringEquals": {
-          "lambda:FunctionUrlAuthType": "NONE"
-        }
-      }
-    },
-    {
-      "Action": "lambda:InvokeFunction",
-      "Principal": "*",
-      "Effect": "Allow",
-      "Sid": "FunctionURLInvokeAllowPublicAccess",
-      "Condition": {
-        "Bool": {
-          "lambda:InvokedViaFunctionUrl": "true"
-        }
-      }
     }
   ]
 }
@@ -113,6 +89,23 @@ resource "aws_lambda_function_url" "cyclemap_latest" {
     expose_headers    = ["keep-alive", "date"]
     max_age           = 86400
   }
+}
+
+// lambda:InvokeFunctionUrl and lambda:InvokeFunction based on 'Example — Default resource-based policy for NONE auth type'
+// See https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html#urls-auth-none
+resource "aws_lambda_permission" "allow_public_access" {
+  statement_id         = "FunctionURLAllowPublicAccess"
+  action               = "lambda:InvokeFunctionUrl"
+  function_name        = aws_lambda_function.cyclemap.function_name
+  principal            = "*"
+  function_url_auth_type = "NONE"
+}
+
+resource "aws_lambda_permission" "invoke_allow_public_access" {
+  statement_id         = "FunctionURLInvokeAllowPublicAccess"
+  action               = "lambda:InvokeFunction"
+  function_name        = aws_lambda_function.cyclemap.function_name
+  principal            = "*"
 }
 
 output "function_url" {
