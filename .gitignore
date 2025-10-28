@@ -1,5 +1,7 @@
 src/__pycache__/
 src/deployment_package.zip
+src/deployment_package-*.zip
 src/package/
 tf/.terraform
 tf/*.env
+terraform.tfvars
