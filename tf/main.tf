@@ -33,6 +33,8 @@ provider "aws" {
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
+  // lambda:InvokeFunctionUrl and lambda:InvokeFunction roles taken from 'Example — Default resource-based policy for NONE auth type'
+  // See https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html#urls-auth-none
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -44,6 +46,28 @@ resource "aws_iam_role" "iam_for_lambda" {
       },
       "Effect": "Allow",
       "Sid": ""
+    },
+    {
+      "Action": "lambda:InvokeFunctionUrl",
+      "Principal": "*",
+      "Effect": "Allow",
+      "Sid": "FunctionURLAllowPublicAccess",
+      "Condition": {
+        "StringEquals": {
+          "lambda:FunctionUrlAuthType": "NONE"
+        }
+      }
+    },
+    {
+      "Action": "lambda:InvokeFunction",
+      "Principal": "*",
+      "Effect": "Allow",
+      "Sid": "FunctionURLInvokeAllowPublicAccess",
+      "Condition": {
+        "Bool": {
+          "lambda:InvokedViaFunctionUrl": "true"
+        }
+      }
     }
   ]
 }
