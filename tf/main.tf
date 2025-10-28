@@ -51,7 +51,7 @@ EOF
 }
 
 locals {
-  deployment_package = "../src/deployment_package-0.0.2.zip"
+  deployment_package = "../src/deployment_package-0.0.3.zip"
 }
 
 resource "aws_lambda_function" "cyclemap" {
