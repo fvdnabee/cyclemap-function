@@ -68,7 +68,7 @@ resource "aws_lambda_function" "cyclemap" {
   source_code_hash = filebase64sha256(local.deployment_package)
 
   architectures = ["arm64"]
-  runtime       = "python3.12"
+  runtime       = "python3.13"
 
   environment {
     variables = {
